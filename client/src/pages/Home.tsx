@@ -228,12 +228,12 @@ export default function Home() {
 
   if (!loaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-fuchsia-50 to-magenta-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin mb-4">
-            <Zap size={40} className="text-magenta-600" />
+            <Zap size={40} className="text-[#E20074]" />
           </div>
-          <p className="text-gray-600 font-medium">Carregando seu roadmap...</p>
+          <p className="text-gray-600 font-medium">Carregando seu guia...</p>
         </div>
       </div>
     );
@@ -242,25 +242,25 @@ export default function Home() {
   const overallProgress = getOverallProgress();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-fuchsia-50 to-white">
+    <div className="min-h-screen bg-[#f4f4f4]">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-fuchsia-100 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <header className="bg-white border-b-4 border-[#E20074] sticky top-0 z-10 shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-magenta-600 to-fuchsia-600 rounded-lg p-2 shadow-lg shadow-magenta-200">
+            <div className="flex items-center gap-4">
+              <div className="bg-[#E20074] rounded-sm p-2">
                 <BookOpen size={28} className="text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">DevOps/SRE Roadmap</h1>
-                <p className="text-sm text-gray-600 mt-1">Seu guia interativo de estudos</p>
+                <h1 className="text-2xl font-bold text-[#333333] tracking-tight">Guia de Estudos</h1>
+                <p className="text-xs font-bold text-[#E20074] uppercase tracking-widest">T-Systems do Brasil</p>
               </div>
             </div>
             <a
               href="https://github.com/paulo-lps/devops_roadmap_guide"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-gray-600 hover:text-magenta-600 transition-colors"
+              className="p-2 text-gray-400 hover:text-[#E20074] transition-colors"
               title="GitHub"
             >
               <Github size={24} />
@@ -294,7 +294,7 @@ export default function Home() {
               </p>
               <button
                 onClick={() => setFilter('all')}
-                className="mt-4 px-4 py-2 bg-magenta-600 text-white rounded-lg hover:bg-magenta-700 transition-colors shadow-md"
+                className="mt-4 px-6 py-2 bg-[#E20074] text-white font-bold rounded-sm hover:bg-[#c00062] transition-colors shadow-sm"
               >
                 Limpar Filtro
               </button>
@@ -316,14 +316,17 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 pt-8 border-t border-fuchsia-100 text-center text-sm text-gray-600">
+        <footer className="mt-16 pt-8 border-t border-gray-200 text-center text-xs text-gray-500">
           <p>
+            © {new Date().getFullYear()} T-Systems do Brasil - Guia de Estudos DevOps/SRE
+          </p>
+          <p className="mt-2">
             Baseado no roadmap de{' '}
             <a
               href="https://twitter.com/BrijPandey"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-magenta-600 hover:underline font-medium"
+              className="text-[#E20074] hover:underline font-bold"
             >
               Brij Kishore Pandey
             </a>

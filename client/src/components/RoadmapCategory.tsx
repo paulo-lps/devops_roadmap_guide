@@ -41,14 +41,14 @@ export function RoadmapCategoryComponent({
   };
 
   const renderAddForm = (path: string[]) => (
-    <div className="mt-2 p-3 border border-dashed border-magenta-300 rounded-lg bg-magenta-50/50">
-      <div className="flex flex-col gap-2">
+    <div className="mt-3 p-4 border-2 border-dashed border-gray-200 rounded-sm bg-white">
+      <div className="flex flex-col gap-3">
         <input
           type="text"
           value={newItemName}
           onChange={(e) => setNewItemName(e.target.value)}
           placeholder="Nome da nova skill..."
-          className="w-full p-2 text-sm border border-gray-200 rounded-md focus:ring-2 focus:ring-magenta-500/20 focus:border-magenta-500 outline-none"
+          className="w-full p-3 text-xs font-bold uppercase tracking-widest border border-gray-200 rounded-sm focus:ring-2 focus:ring-[#E20074]/20 focus:border-[#E20074] outline-none"
           onKeyDown={(e) => e.key === 'Enter' && handleAddItem(path)}
           autoFocus
         />
@@ -56,22 +56,22 @@ export function RoadmapCategoryComponent({
           <select
             value={newItemImportance}
             onChange={(e) => setNewItemImportance(e.target.value as ImportanceLevel)}
-            className="text-xs p-1.5 border border-gray-200 rounded-md outline-none"
+            className="text-[10px] font-black uppercase tracking-widest p-2 border border-gray-200 rounded-sm outline-none"
           >
             <option value="Very Important">Muito Importante</option>
             <option value="Important">Importante</option>
             <option value="Normal">Normal</option>
           </select>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
               onClick={() => setShowAddForm({path: null})}
-              className="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700"
+              className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-gray-700"
             >
               Cancelar
             </button>
             <button
               onClick={() => handleAddItem(path)}
-              className="px-3 py-1.5 text-xs bg-magenta-600 text-white rounded-md hover:bg-magenta-700 transition-colors"
+              className="px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-[#E20074] text-white rounded-sm hover:bg-[#c00062] transition-colors"
             >
               Adicionar
             </button>
@@ -85,7 +85,7 @@ export function RoadmapCategoryComponent({
     const itemsList = items || [];
     
     return (
-      <div className="mb-4 space-y-2">
+      <div className="mb-6 space-y-1">
         {itemsList.map((item) => (
           <RoadmapItem
             key={item.name}
@@ -101,7 +101,7 @@ export function RoadmapCategoryComponent({
         ) : (
           <button
             onClick={() => setShowAddForm({path})}
-            className="flex items-center gap-2 text-xs text-magenta-600 hover:text-magenta-700 font-medium p-2 mt-1"
+            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#E20074] hover:text-[#c00062] p-3 mt-2 border border-dashed border-gray-200 w-full justify-center hover:bg-gray-50 transition-colors"
           >
             <Plus size={14} /> Adicionar skill
           </button>
@@ -114,9 +114,9 @@ export function RoadmapCategoryComponent({
     if (!subcategories) return null;
 
     return subcategories.map((sub) => (
-      <div key={sub.name} className="ml-4 mt-4">
-        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-magenta-400"></span>
+      <div key={sub.name} className="ml-6 mt-6 border-l-2 border-gray-100 pl-6">
+        <h4 className="text-xs font-black text-[#333333] uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+          <span className="w-2 h-2 bg-[#E20074]"></span>
           {sub.name}
         </h4>
         {renderItems(sub.items, [...path, sub.name])}
@@ -126,39 +126,39 @@ export function RoadmapCategoryComponent({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md">
+    <div className="bg-white rounded-sm border border-gray-200 shadow-sm overflow-hidden transition-all duration-300 mb-8">
       {/* Category Header */}
       <div 
-        className="p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
+        className="p-6 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex-1">
-          <div className="flex items-center gap-3 mb-1">
-            <h3 className="text-lg font-bold text-gray-900">{category.category}</h3>
-            <span className="px-2 py-0.5 bg-magenta-100 text-magenta-700 text-[10px] font-bold rounded-full uppercase tracking-wider">
+          <div className="flex items-center gap-4 mb-2">
+            <h3 className="text-xl font-black text-[#333333] uppercase tracking-tighter">{category.category}</h3>
+            <span className="px-3 py-1 bg-[#E20074] text-white text-[10px] font-black rounded-sm uppercase tracking-widest">
               {progress.percentage}%
             </span>
           </div>
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <span>{progress.completed} de {progress.total} tópicos concluídos</span>
+          <div className="flex items-center gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            <span>{progress.completed} / {progress.total} Topics Completed</span>
           </div>
         </div>
-        <div className="text-gray-400">
-          {expanded ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+        <div className="text-gray-300">
+          {expanded ? <ChevronUp size={28} /> : <ChevronDown size={28} />}
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="h-1.5 w-full bg-gray-100">
+      <div className="h-1 w-full bg-gray-50">
         <div 
-          className="h-full bg-gradient-to-r from-magenta-500 to-fuchsia-500 transition-all duration-500 ease-out"
+          className="h-full bg-[#E20074] transition-all duration-700 ease-in-out"
           style={{ width: `${progress.percentage}%` }}
         />
       </div>
 
       {/* Category Content */}
       {expanded && (
-        <div className="p-5 bg-gray-50/30">
+        <div className="p-8 bg-white">
           {renderItems(category.items)}
           {renderSubcategories(category.subcategories)}
         </div>

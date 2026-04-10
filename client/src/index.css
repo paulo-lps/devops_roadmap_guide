@@ -45,45 +45,45 @@
 }
 
 :root {
-  --primary: #d946ef;
-  --primary-foreground: #fdf4ff;
-  --sidebar-primary: #c026d3;
-  --sidebar-primary-foreground: #fdf4ff;
-  --chart-1: #d946ef;
-  --chart-2: #c026d3;
-  --chart-3: #a21caf;
-  --chart-4: #86198f;
-  --chart-5: #701a75;
-  --radius: 0.65rem;
+  --primary: #E20074; /* T-Systems Magenta */
+  --primary-foreground: #ffffff;
+  --sidebar-primary: #E20074;
+  --sidebar-primary-foreground: #ffffff;
+  --chart-1: #E20074;
+  --chart-2: #666666;
+  --chart-3: #333333;
+  --chart-4: #999999;
+  --chart-5: #cccccc;
+  --radius: 0.4rem; /* More corporate, less rounded */
   --background: #ffffff;
-  --foreground: #1f2937;
-  --card: #f9fafb;
-  --card-foreground: #1f2937;
+  --foreground: #333333;
+  --card: #ffffff;
+  --card-foreground: #333333;
   --popover: #ffffff;
-  --popover-foreground: #1f2937;
-  --secondary: #fdf4ff;
-  --secondary-foreground: #701a75;
-  --muted: #f5f3ff;
-  --muted-foreground: #7c3aed;
-  --accent: #d946ef;
+  --popover-foreground: #333333;
+  --secondary: #f4f4f4;
+  --secondary-foreground: #333333;
+  --muted: #f4f4f4;
+  --muted-foreground: #666666;
+  --accent: #E20074;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #f0abfc;
-  --input: #fdf4ff;
-  --ring: #d946ef;
-  --sidebar: #f9fafb;
-  --sidebar-foreground: #1f2937;
-  --sidebar-accent: #f5f3ff;
-  --sidebar-accent-foreground: #1f2937;
-  --sidebar-border: #f0abfc;
-  --sidebar-ring: #d946ef;
-  --color-very-important: #ef4444;
-  --color-important: #f59e0b;
-  --color-normal: #d1d5db;
-  --color-completed: #d946ef;
-  --color-in-progress: #f0abfc;
-  --color-not-started: #9ca3af;
+  --border: #e5e5e5;
+  --input: #ffffff;
+  --ring: #E20074;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #333333;
+  --sidebar-accent: #f4f4f4;
+  --sidebar-accent-foreground: #333333;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #E20074;
+  --color-very-important: #E20074;
+  --color-important: #666666;
+  --color-normal: #999999;
+  --color-completed: #E20074;
+  --color-in-progress: #666666;
+  --color-not-started: #cccccc;
 }
 
 .dark {
