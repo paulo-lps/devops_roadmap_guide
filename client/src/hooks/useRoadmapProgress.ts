@@ -22,7 +22,7 @@ export interface RoadmapSubcategory {
   subcategories?: RoadmapSubcategory[];
 }
 
-const STORAGE_KEY = 'devops-roadmap-progress';
+const STORAGE_KEY = 'devops-roadmap-progress-v2'; // Versão 2 para evitar conflitos com dados antigos
 
 export function useRoadmapProgress(initialData: RoadmapCategory[]) {
   const [data, setData] = useState<RoadmapCategory[]>(initialData);
@@ -35,14 +35,20 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
+          // Merge initialData structure with saved progress to ensure new categories/items appear
           setData(parsed);
+        } else {
+          setData(initialData);
         }
       } catch (error) {
         console.error('Failed to load progress:', error);
+        setData(initialData);
       }
+    } else {
+      setData(initialData);
     }
     setLoaded(true);
-  }, []);
+  }, [initialData]);
 
   // Save to localStorage whenever data changes
   useEffect(() => {
@@ -59,7 +65,6 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
         const updateNested = (obj: any, currentPath: string[]): any => {
           if (!obj) return obj;
 
-          // If we are at the level where the item should be
           if (currentPath.length === 1) {
             return {
               ...obj,
@@ -69,7 +74,6 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
             };
           }
 
-          // If we need to go deeper into subcategories
           if (obj.subcategories && currentPath.length > 1) {
             return {
               ...obj,
@@ -109,7 +113,6 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
         const addNested = (obj: any, currentPath: string[]): any => {
           if (!obj) return obj;
 
-          // If parentPath is empty, add to top-level category items
           if (currentPath.length === 0) {
             return {
               ...obj,
@@ -117,19 +120,26 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
             };
           }
 
-          // If we are at the parent level
           if (currentPath.length === 1) {
-            return {
-              ...obj,
-              subcategories: (obj.subcategories || []).map((sub: RoadmapSubcategory) =>
-                sub.name === currentPath[0]
-                  ? { ...sub, items: [...(sub.items || []), newItem] }
-                  : sub
-              )
-            };
+            const subExists = (obj.subcategories || []).some((s: any) => s.name === currentPath[0]);
+            if (subExists) {
+              return {
+                ...obj,
+                subcategories: (obj.subcategories || []).map((sub: RoadmapSubcategory) =>
+                  sub.name === currentPath[0]
+                    ? { ...sub, items: [...(sub.items || []), newItem] }
+                    : sub
+                )
+              };
+            } else {
+              // If subcategory doesn't exist at this level, add to items
+              return {
+                ...obj,
+                items: [...(obj.items || []), newItem]
+              };
+            }
           }
 
-          // Go deeper
           if (obj.subcategories) {
             return {
               ...obj,

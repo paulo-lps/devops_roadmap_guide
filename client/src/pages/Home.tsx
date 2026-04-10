@@ -242,25 +242,25 @@ export default function Home() {
   const overallProgress = getOverallProgress();
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4]">
+    <div className="min-h-screen bg-[#f4f4f4] flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b-4 border-[#E20074] sticky top-0 z-10 shadow-md">
+      <header className="bg-white border-b-4 border-[#E20074] sticky top-0 z-50 shadow-md w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="bg-[#E20074] rounded-sm p-2">
+              <div className="bg-[#E20074] rounded-sm p-2 flex-shrink-0">
                 <BookOpen size={28} className="text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-[#333333] tracking-tight">DevOps/SRE Roadmap</h1>
-                <p className="text-xs font-bold text-[#E20074] uppercase tracking-widest">Guia de Estudos</p>
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-2xl font-bold text-[#333333] tracking-tight truncate">DevOps/SRE Roadmap</h1>
+                <p className="text-[10px] sm:text-xs font-bold text-[#E20074] uppercase tracking-widest">Guia de Estudos</p>
               </div>
             </div>
             <a
               href="https://github.com/paulo-lps/devops_roadmap_guide"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-gray-400 hover:text-[#E20074] transition-colors"
+              className="p-2 text-gray-400 hover:text-[#E20074] transition-colors flex-shrink-0"
               title="GitHub"
             >
               <Github size={24} />
@@ -270,7 +270,7 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Overall Progress */}
         <div className="mb-8">
           <OverallProgress
@@ -288,7 +288,7 @@ export default function Home() {
         {/* Categories */}
         <div className="space-y-6">
           {filteredData.length === 0 ? (
-            <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+            <div className="bg-white rounded-sm border border-gray-200 p-12 text-center">
               <p className="text-gray-600 font-medium">
                 Nenhum tópico encontrado para este filtro.
               </p>
@@ -316,7 +316,7 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 pt-8 border-t border-gray-200 text-center text-xs text-gray-500">
+        <footer className="mt-16 pt-8 border-t border-gray-200 text-center text-xs text-gray-500 pb-8">
           <p>
             © {new Date().getFullYear()} - Guia de Estudos DevOps/SRE
           </p>
