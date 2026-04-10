@@ -1,0 +1,168 @@
+[
+  {
+    "id": 1,
+    "category": "Learn Programming Languages",
+    "items": [
+      {"name": "Python", "importance": "Very Important"},
+      {"name": "Golang", "importance": "Important"},
+      {"name": "JavaScript", "importance": "Important"},
+      {"name": "Ruby", "importance": "Normal"}
+    ]
+  },
+  {
+    "id": 2,
+    "category": "Server Administration",
+    "items": [
+      {"name": "Linux", "importance": "Very Important"},
+      {"name": "Unix", "importance": "Important"},
+      {"name": "Windows", "importance": "Normal"}
+    ]
+  },
+  {
+    "id": 3,
+    "category": "Network and Security",
+    "items": [
+      {"name": "TCP/IP Fundamental", "importance": "Very Important"},
+      {"name": "Protocols, DNS, HTTP/s, FTP, SSL...", "importance": "Important"}
+    ]
+  },
+  {
+    "id": 4,
+    "category": "Servers",
+    "subcategories": [
+      {
+        "name": "Web Server",
+        "items": [
+          {"name": "Apache", "importance": "Very Important"},
+          {"name": "Nginx", "importance": "Very Important"},
+          {"name": "Tomcat", "importance": "Important"},
+          {"name": "IIS", "importance": "Normal"},
+          {"name": "Jetty", "importance": "Normal"}
+        ]
+      },
+      {
+        "name": "Caching",
+        "items": [
+          {"name": "Redis", "importance": "Very Important"},
+          {"name": "Memcache", "importance": "Important"}
+        ]
+      },
+      {
+        "name": "Database",
+        "subcategories": [
+          {
+            "name": "NoSQL",
+            "items": [
+              {"name": "MongoDB", "importance": "Very Important"},
+              {"name": "Cassandra", "importance": "Important"},
+              {"name": "AWS DynamoDB", "importance": "Important"},
+              {"name": "Google Datastore", "importance": "Normal"}
+            ]
+          },
+          {
+            "name": "SQL",
+            "items": [
+              {"name": "Oracle DB", "importance": "Important"},
+              {"name": "MySQL/MariaDB", "importance": "Very Important"},
+              {"name": "PostgreSQL", "importance": "Very Important"},
+              {"name": "MS-SQL", "importance": "Normal"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "category": "Infrastructure as Code",
+    "subcategories": [
+      {
+        "name": "Configuration Management",
+        "items": [
+          {"name": "Ansible", "importance": "Very Important"},
+          {"name": "Puppet", "importance": "Important"},
+          {"name": "Chef", "importance": "Important"},
+          {"name": "Salt Stack", "importance": "Normal"}
+        ]
+      },
+      {
+        "name": "Container",
+        "items": [
+          {"name": "Docker", "importance": "Very Important"},
+          {"name": "rkt", "importance": "Normal"},
+          {"name": "LXC", "importance": "Normal"}
+        ]
+      },
+      {
+        "name": "Container Orchestrator",
+        "items": [
+          {"name": "Kubernetes", "importance": "Very Important"},
+          {"name": "Openshift", "importance": "Important"},
+          {"name": "NoMad", "importance": "Normal"},
+          {"name": "Docker Swarm", "importance": "Normal"}
+        ]
+      },
+      {
+        "name": "Infrastructure Provisioning",
+        "items": [
+          {"name": "Terraform", "importance": "Very Important"},
+          {"name": "AWS Cloudformation", "importance": "Important"},
+          {"name": "Azure Template", "importance": "Important"},
+          {"name": "Google Deployment Manager", "importance": "Normal"}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "category": "CI/CD",
+    "items": [
+      {"name": "Jenkins", "importance": "Very Important"},
+      {"name": "TeamCity", "importance": "Important"},
+      {"name": "Circle CI", "importance": "Important"},
+      {"name": "Travis CI", "importance": "Important"},
+      {"name": "AWS Code pipeline", "importance": "Important"},
+      {"name": "Google Cloud Build", "importance": "Important"},
+      {"name": "GitLab", "importance": "Very Important"},
+      {"name": "Bitbucket Pipeline", "importance": "Important"},
+      {"name": "Github Action", "importance": "Very Important"}
+    ]
+  },
+  {
+    "id": 7,
+    "category": "Monitoring and Logging",
+    "subcategories": [
+      {
+        "name": "Monitoring",
+        "items": [
+          {"name": "Zabbix", "importance": "Important"},
+          {"name": "Prometheus", "importance": "Very Important"},
+          {"name": "Grafana", "importance": "Very Important"},
+          {"name": "DataDog", "importance": "Important"},
+          {"name": "New Relic", "importance": "Important"},
+          {"name": "CheckMK", "importance": "Normal"}
+        ]
+      },
+      {
+        "name": "Logging",
+        "items": [
+          {"name": "ELK", "importance": "Very Important"},
+          {"name": "Graylog", "importance": "Important"},
+          {"name": "Splunk", "importance": "Important"}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "category": "Clouds",
+    "items": [
+      {"name": "AWS", "importance": "Very Important"},
+      {"name": "Azure", "importance": "Very Important"},
+      {"name": "GCP", "importance": "Very Important"},
+      {"name": "OpenStack", "importance": "Normal"},
+      {"name": "Oracle", "importance": "Normal"},
+      {"name": "IBM Bluemix", "importance": "Normal"}
+    ]
+  }
+]

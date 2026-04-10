@@ -1,24 +1,328 @@
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { Streamdown } from 'streamdown';
+import { useEffect, useState } from 'react';
+import { BookOpen, Github, Zap } from 'lucide-react';
+import { useRoadmapProgress, RoadmapCategory } from '@/hooks/useRoadmapProgress';
+import { RoadmapCategoryComponent } from '@/components/RoadmapCategory';
+import { OverallProgress } from '@/components/OverallProgress';
+import { ImportanceFilter, ImportanceLevel } from '@/components/ImportanceFilter';
+
+const roadmapData: RoadmapCategory[] = [
+  {
+    id: 1,
+    category: "Learn Programming Languages",
+    items: [
+      {name: "Python", importance: "Very Important", completed: false},
+      {name: "Golang", importance: "Important", completed: false},
+      {name: "JavaScript", importance: "Important", completed: false},
+      {name: "Ruby", importance: "Normal", completed: false}
+    ]
+  },
+  {
+    id: 2,
+    category: "Server Administration",
+    items: [
+      {name: "Linux", importance: "Very Important", completed: false},
+      {name: "Unix", importance: "Important", completed: false},
+      {name: "Windows", importance: "Normal", completed: false}
+    ]
+  },
+  {
+    id: 3,
+    category: "Network and Security",
+    items: [
+      {name: "TCP/IP Fundamental", importance: "Very Important", completed: false},
+      {name: "Protocols, DNS, HTTP/s, FTP, SSL...", importance: "Important", completed: false}
+    ]
+  },
+  {
+    id: 4,
+    category: "Servers",
+    subcategories: [
+      {
+        name: "Web Server",
+        items: [
+          {name: "Apache", importance: "Very Important", completed: false},
+          {name: "Nginx", importance: "Very Important", completed: false},
+          {name: "Tomcat", importance: "Important", completed: false},
+          {name: "IIS", importance: "Normal", completed: false},
+          {name: "Jetty", importance: "Normal", completed: false}
+        ]
+      },
+      {
+        name: "Caching",
+        items: [
+          {name: "Redis", importance: "Very Important", completed: false},
+          {name: "Memcache", importance: "Important", completed: false}
+        ]
+      },
+      {
+        name: "Database",
+        subcategories: [
+          {
+            name: "NoSQL",
+            items: [
+              {name: "MongoDB", importance: "Very Important", completed: false},
+              {name: "Cassandra", importance: "Important", completed: false},
+              {name: "AWS DynamoDB", importance: "Important", completed: false},
+              {name: "Google Datastore", importance: "Normal", completed: false}
+            ]
+          },
+          {
+            name: "SQL",
+            items: [
+              {name: "Oracle DB", importance: "Important", completed: false},
+              {name: "MySQL/MariaDB", importance: "Very Important", completed: false},
+              {name: "PostgreSQL", importance: "Very Important", completed: false},
+              {name: "MS-SQL", importance: "Normal", completed: false}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 5,
+    category: "Infrastructure as Code",
+    subcategories: [
+      {
+        name: "Configuration Management",
+        items: [
+          {name: "Ansible", importance: "Very Important", completed: false},
+          {name: "Puppet", importance: "Important", completed: false},
+          {name: "Chef", importance: "Important", completed: false},
+          {name: "Salt Stack", importance: "Normal", completed: false}
+        ]
+      },
+      {
+        name: "Container",
+        items: [
+          {name: "Docker", importance: "Very Important", completed: false},
+          {name: "rkt", importance: "Normal", completed: false},
+          {name: "LXC", importance: "Normal", completed: false}
+        ]
+      },
+      {
+        name: "Container Orchestrator",
+        items: [
+          {name: "Kubernetes", importance: "Very Important", completed: false},
+          {name: "Openshift", importance: "Important", completed: false},
+          {name: "NoMad", importance: "Normal", completed: false},
+          {name: "Docker Swarm", importance: "Normal", completed: false}
+        ]
+      },
+      {
+        name: "Infrastructure Provisioning",
+        items: [
+          {name: "Terraform", importance: "Very Important", completed: false},
+          {name: "AWS Cloudformation", importance: "Important", completed: false},
+          {name: "Azure Template", importance: "Important", completed: false},
+          {name: "Google Deployment Manager", importance: "Normal", completed: false}
+        ]
+      }
+    ]
+  },
+  {
+    id: 6,
+    category: "CI/CD",
+    items: [
+      {name: "Jenkins", importance: "Very Important", completed: false},
+      {name: "TeamCity", importance: "Important", completed: false},
+      {name: "Circle CI", importance: "Important", completed: false},
+      {name: "Travis CI", importance: "Important", completed: false},
+      {name: "AWS Code pipeline", importance: "Important", completed: false},
+      {name: "Google Cloud Build", importance: "Important", completed: false},
+      {name: "GitLab", importance: "Very Important", completed: false},
+      {name: "Bitbucket Pipeline", importance: "Important", completed: false},
+      {name: "Github Action", importance: "Very Important", completed: false}
+    ]
+  },
+  {
+    id: 7,
+    category: "Monitoring and Logging",
+    subcategories: [
+      {
+        name: "Monitoring",
+        items: [
+          {name: "Zabbix", importance: "Important", completed: false},
+          {name: "Prometheus", importance: "Very Important", completed: false},
+          {name: "Grafana", importance: "Very Important", completed: false},
+          {name: "DataDog", importance: "Important", completed: false},
+          {name: "New Relic", importance: "Important", completed: false},
+          {name: "CheckMK", importance: "Normal", completed: false}
+        ]
+      },
+      {
+        name: "Logging",
+        items: [
+          {name: "ELK", importance: "Very Important", completed: false},
+          {name: "Graylog", importance: "Important", completed: false},
+          {name: "Splunk", importance: "Important", completed: false}
+        ]
+      }
+    ]
+  },
+  {
+    id: 8,
+    category: "Clouds",
+    items: [
+      {name: "AWS", importance: "Very Important", completed: false},
+      {name: "Azure", importance: "Very Important", completed: false},
+      {name: "GCP", importance: "Very Important", completed: false},
+      {name: "OpenStack", importance: "Normal", completed: false},
+      {name: "Oracle", importance: "Normal", completed: false},
+      {name: "IBM Bluemix", importance: "Normal", completed: false}
+    ]
+  }
+];
 
 /**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Best Practices, Design Guide and Common Pitfalls
+ * Design Philosophy: Minimalismo Técnico com Foco em Progresso
+ * - Interface limpa e funcional inspirada em dashboards técnicos profissionais
+ * - Código de cores por importância (Vermelho/Amarelo/Cinza)
+ * - Animações minimalistas mas satisfatórias
+ * - Foco total no aprendizado e acompanhamento de progresso
  */
+
 export default function Home() {
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
+  const { data, loaded, toggleItem, getProgress, getOverallProgress } = useRoadmapProgress(roadmapData);
+  const [filter, setFilter] = useState<ImportanceLevel>('all');
+  const [filteredData, setFilteredData] = useState<RoadmapCategory[]>([]);
+
+  useEffect(() => {
+    if (!loaded) return;
+
+    if (filter === 'all') {
+      setFilteredData(data);
+    } else {
+      const filtered = data.map(category => {
+        const filterItems = (items: any[]) => {
+          return items.filter(item => item.importance === filter);
+        };
+
+        const filterSubcategories = (subcategories: any[]): any[] => {
+          return subcategories
+            .map(sub => ({
+              ...sub,
+              items: filterItems(sub.items),
+              subcategories: sub.subcategories ? filterSubcategories(sub.subcategories) : undefined,
+            }))
+            .filter(sub => sub.items.length > 0 || (sub.subcategories && sub.subcategories.some((s: any) => s.items.length > 0)));
+        };
+
+        return {
+          ...category,
+          items: category.items ? filterItems(category.items) : undefined,
+          subcategories: category.subcategories ? (filterSubcategories(category.subcategories) as any) : undefined,
+        };
+      }).filter(category => {
+        const hasItems = category.items && category.items.length > 0;
+        const hasSubcategories = category.subcategories && category.subcategories.length > 0;
+        return hasItems || hasSubcategories;
+      });
+
+      setFilteredData(filtered);
+    }
+  }, [filter, data, loaded]);
+
+  if (!loaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin mb-4">
+            <Zap size={40} className="text-blue-600" />
+          </div>
+          <p className="text-gray-600 font-medium">Carregando seu roadmap...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const overallProgress = getOverallProgress();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg p-2">
+                <BookOpen size={28} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">DevOps/SRE Roadmap</h1>
+                <p className="text-sm text-gray-600 mt-1">Seu guia interativo de estudos</p>
+              </div>
+            </div>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
+              title="GitHub"
+            >
+              <Github size={24} />
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Overall Progress */}
+        <div className="mb-8">
+          <OverallProgress
+            completed={overallProgress.completed}
+            total={overallProgress.total}
+            percentage={overallProgress.percentage}
+          />
+        </div>
+
+        {/* Filter */}
+        <div className="mb-8">
+          <ImportanceFilter selected={filter} onChange={setFilter} />
+        </div>
+
+        {/* Categories */}
+        <div className="space-y-6">
+          {filteredData.length === 0 ? (
+            <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+              <p className="text-gray-600 font-medium">
+                Nenhum tópico encontrado para este filtro.
+              </p>
+              <button
+                onClick={() => setFilter('all')}
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Limpar Filtro
+              </button>
+            </div>
+          ) : (
+            filteredData.map(category => (
+              <RoadmapCategoryComponent
+                key={category.id}
+                category={category}
+                progress={getProgress(category.id)}
+                onToggleItem={toggleItem}
+              />
+            ))
+          )}
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-16 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
+          <p>
+            Baseado no roadmap de{' '}
+            <a
+              href="https://twitter.com/BrijPandey"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              Brij Kishore Pandey
+            </a>
+          </p>
+          <p className="mt-2">Seu progresso é salvo automaticamente no navegador</p>
+        </footer>
       </main>
     </div>
   );
