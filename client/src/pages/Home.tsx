@@ -202,10 +202,10 @@ export default function Home() {
           return subcategories
             .map(sub => ({
               ...sub,
-              items: filterItems(sub.items),
+              items: sub.items ? filterItems(sub.items) : [],
               subcategories: sub.subcategories ? filterSubcategories(sub.subcategories) : undefined,
             }))
-            .filter(sub => sub.items.length > 0 || (sub.subcategories && sub.subcategories.some((s: any) => s.items.length > 0)));
+            .filter(sub => (sub.items && sub.items.length > 0) || (sub.subcategories && sub.subcategories.some((s: any) => s.items && s.items.length > 0)));
         };
 
         return {
