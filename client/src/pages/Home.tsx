@@ -252,8 +252,8 @@ export default function Home() {
                 <BookOpen size={28} className="text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-[#333333] tracking-tight">Guia de Estudos</h1>
-                <p className="text-xs font-bold text-[#E20074] uppercase tracking-widest">T-Systems do Brasil</p>
+                <h1 className="text-2xl font-bold text-[#333333] tracking-tight">DevOps/SRE Roadmap</h1>
+                <p className="text-xs font-bold text-[#E20074] uppercase tracking-widest">Guia de Estudos</p>
               </div>
             </div>
             <a
@@ -318,7 +318,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="mt-16 pt-8 border-t border-gray-200 text-center text-xs text-gray-500">
           <p>
-            © {new Date().getFullYear()} T-Systems do Brasil - Guia de Estudos DevOps/SRE
+            © {new Date().getFullYear()} - Guia de Estudos DevOps/SRE
           </p>
           <p className="mt-2">
             Baseado no roadmap de{' '}
