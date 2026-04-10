@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 
+export type ImportanceLevel = 'Very Important' | 'Important' | 'Normal';
+
 export interface RoadmapItem {
   name: string;
-  importance: 'Very Important' | 'Important' | 'Normal';
+  importance: ImportanceLevel;
   completed: boolean;
+  notes?: string;
 }
 
 export interface RoadmapCategory {
@@ -30,7 +33,11 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
-        setData(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        // Basic validation to ensure we have the right structure
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setData(parsed);
+        }
       } catch (error) {
         console.error('Failed to load progress:', error);
       }
@@ -45,35 +52,34 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
     }
   }, [data, loaded]);
 
-  const toggleItem = (categoryId: number, itemPath: string[]) => {
+  const updateItemInData = (categoryId: number, itemPath: string[], updateFn: (item: RoadmapItem) => RoadmapItem) => {
     setData(prevData =>
       prevData.map(category => {
         if (category.id !== categoryId) return category;
 
-        const updateNested = (obj: any): any => {
+        const updateNested = (obj: any, currentPath: string[]): any => {
           if (!obj) return obj;
 
-          if (Array.isArray(obj)) {
-            return obj.map(item => updateNested(item));
+          // If we are at the level where the item should be
+          if (currentPath.length === 1) {
+            if (obj.items) {
+              return {
+                ...obj,
+                items: obj.items.map((item: RoadmapItem) =>
+                  item.name === currentPath[0] ? updateFn(item) : item
+                ),
+              };
+            }
+            return obj;
           }
 
-          if (obj.items && itemPath.length === 1) {
-            return {
-              ...obj,
-              items: obj.items.map((item: RoadmapItem) =>
-                item.name === itemPath[0]
-                  ? { ...item, completed: !item.completed }
-                  : item
-              ),
-            };
-          }
-
-          if (obj.subcategories && itemPath.length > 1) {
+          // If we need to go deeper into subcategories
+          if (obj.subcategories && currentPath.length > 1) {
             return {
               ...obj,
               subcategories: obj.subcategories.map((sub: RoadmapSubcategory) =>
-                sub.name === itemPath[0]
-                  ? updateNested({ ...sub, items: sub.items })
+                sub.name === currentPath[0]
+                  ? updateNested(sub, currentPath.slice(1))
                   : sub
               ),
             };
@@ -82,7 +88,107 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
           return obj;
         };
 
-        return updateNested(category);
+        return updateNested(category, itemPath);
+      })
+    );
+  };
+
+  const toggleItem = (categoryId: number, itemPath: string[]) => {
+    updateItemInData(categoryId, itemPath, (item) => ({ ...item, completed: !item.completed }));
+  };
+
+  const updateNotes = (categoryId: number, itemPath: string[], notes: string) => {
+    updateItemInData(categoryId, itemPath, (item) => ({ ...item, notes }));
+  };
+
+  const updateImportance = (categoryId: number, itemPath: string[], importance: ImportanceLevel) => {
+    updateItemInData(categoryId, itemPath, (item) => ({ ...item, importance }));
+  };
+
+  const addItem = (categoryId: number, parentPath: string[], newItem: RoadmapItem) => {
+    setData(prevData =>
+      prevData.map(category => {
+        if (category.id !== categoryId) return category;
+
+        const addNested = (obj: any, currentPath: string[]): any => {
+          if (!obj) return obj;
+
+          // If parentPath is empty, add to top-level category items
+          if (currentPath.length === 0) {
+            return {
+              ...obj,
+              items: [...(obj.items || []), newItem]
+            };
+          }
+
+          // If we are at the parent level
+          if (currentPath.length === 1) {
+            if (obj.subcategories) {
+              return {
+                ...obj,
+                subcategories: obj.subcategories.map((sub: RoadmapSubcategory) =>
+                  sub.name === currentPath[0]
+                    ? { ...sub, items: [...(sub.items || []), newItem] }
+                    : sub
+                )
+              };
+            }
+            return obj;
+          }
+
+          // Go deeper
+          if (obj.subcategories) {
+            return {
+              ...obj,
+              subcategories: obj.subcategories.map((sub: RoadmapSubcategory) =>
+                sub.name === currentPath[0]
+                  ? addNested(sub, currentPath.slice(1))
+                  : sub
+              )
+            };
+          }
+
+          return obj;
+        };
+
+        return addNested(category, parentPath);
+      })
+    );
+  };
+
+  const removeItem = (categoryId: number, itemPath: string[]) => {
+    setData(prevData =>
+      prevData.map(category => {
+        if (category.id !== categoryId) return category;
+
+        const removeNested = (obj: any, currentPath: string[]): any => {
+          if (!obj) return obj;
+
+          if (currentPath.length === 1) {
+            if (obj.items) {
+              return {
+                ...obj,
+                items: obj.items.filter((item: RoadmapItem) => item.name !== currentPath[0])
+              };
+            }
+            return obj;
+          }
+
+          if (obj.subcategories) {
+            return {
+              ...obj,
+              subcategories: obj.subcategories.map((sub: RoadmapSubcategory) =>
+                sub.name === currentPath[0]
+                  ? removeNested(sub, currentPath.slice(1))
+                  : sub
+              )
+            };
+          }
+
+          return obj;
+        };
+
+        return removeNested(category, itemPath);
       })
     );
   };
@@ -111,18 +217,7 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
       }
     };
 
-    if (category.items) {
-      category.items.forEach((item: RoadmapItem) => {
-        total++;
-        if (item.completed) completed++;
-      });
-    }
-
-    if (category.subcategories) {
-      category.subcategories.forEach((sub: RoadmapSubcategory) => {
-        countItems(sub);
-      });
-    }
+    countItems(category);
 
     return {
       completed,
@@ -152,6 +247,10 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
     data,
     loaded,
     toggleItem,
+    updateNotes,
+    updateImportance,
+    addItem,
+    removeItem,
     getProgress,
     getOverallProgress,
   };

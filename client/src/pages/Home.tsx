@@ -5,7 +5,7 @@ import { RoadmapCategoryComponent } from '@/components/RoadmapCategory';
 import { OverallProgress } from '@/components/OverallProgress';
 import { ImportanceFilter, ImportanceLevel } from '@/components/ImportanceFilter';
 
-const roadmapData: RoadmapCategory[] = [
+const initialRoadmapData: RoadmapCategory[] = [
   {
     id: 1,
     category: "Learn Programming Languages",
@@ -174,17 +174,20 @@ const roadmapData: RoadmapCategory[] = [
   }
 ];
 
-/**
- * Design Philosophy: Minimalismo Técnico com Foco em Progresso
- * - Interface limpa e funcional inspirada em dashboards técnicos profissionais
- * - Código de cores por importância (Vermelho/Amarelo/Cinza)
- * - Animações minimalistas mas satisfatórias
- * - Foco total no aprendizado e acompanhamento de progresso
- */
-
 export default function Home() {
-  const { data, loaded, toggleItem, getProgress, getOverallProgress } = useRoadmapProgress(roadmapData);
-  const [filter, setFilter] = useState<ImportanceLevel>('all');
+  const { 
+    data, 
+    loaded, 
+    toggleItem, 
+    updateNotes, 
+    updateImportance, 
+    addItem, 
+    removeItem, 
+    getProgress, 
+    getOverallProgress 
+  } = useRoadmapProgress(initialRoadmapData);
+  
+  const [filter, setFilter] = useState<ImportanceLevel | 'all'>('all');
   const [filteredData, setFilteredData] = useState<RoadmapCategory[]>([]);
 
   useEffect(() => {
@@ -225,10 +228,10 @@ export default function Home() {
 
   if (!loaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-fuchsia-50 to-magenta-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin mb-4">
-            <Zap size={40} className="text-blue-600" />
+            <Zap size={40} className="text-magenta-600" />
           </div>
           <p className="text-gray-600 font-medium">Carregando seu roadmap...</p>
         </div>
@@ -239,13 +242,13 @@ export default function Home() {
   const overallProgress = getOverallProgress();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-fuchsia-50 to-white">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+      <header className="bg-white/80 backdrop-blur-md border-b border-fuchsia-100 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg p-2">
+              <div className="bg-gradient-to-br from-magenta-600 to-fuchsia-600 rounded-lg p-2 shadow-lg shadow-magenta-200">
                 <BookOpen size={28} className="text-white" />
               </div>
               <div>
@@ -254,10 +257,10 @@ export default function Home() {
               </div>
             </div>
             <a
-              href="https://github.com"
+              href="https://github.com/paulo-lps/devops_roadmap_guide"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="p-2 text-gray-600 hover:text-magenta-600 transition-colors"
               title="GitHub"
             >
               <Github size={24} />
@@ -291,7 +294,7 @@ export default function Home() {
               </p>
               <button
                 onClick={() => setFilter('all')}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="mt-4 px-4 py-2 bg-magenta-600 text-white rounded-lg hover:bg-magenta-700 transition-colors shadow-md"
               >
                 Limpar Filtro
               </button>
@@ -303,25 +306,29 @@ export default function Home() {
                 category={category}
                 progress={getProgress(category.id)}
                 onToggleItem={toggleItem}
+                onUpdateNotes={updateNotes}
+                onUpdateImportance={updateImportance}
+                onAddItem={addItem}
+                onRemoveItem={removeItem}
               />
             ))
           )}
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
+        <footer className="mt-16 pt-8 border-t border-fuchsia-100 text-center text-sm text-gray-600">
           <p>
             Baseado no roadmap de{' '}
             <a
               href="https://twitter.com/BrijPandey"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="text-magenta-600 hover:underline font-medium"
             >
               Brij Kishore Pandey
             </a>
           </p>
-          <p className="mt-2">Seu progresso é salvo automaticamente no navegador</p>
+          <p className="mt-2">Seu progresso e alterações são salvos automaticamente no navegador</p>
         </footer>
       </main>
     </div>
