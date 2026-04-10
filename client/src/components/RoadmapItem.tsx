@@ -22,12 +22,30 @@ export function RoadmapItem({
   const [isExpanded, setIsExpanded] = useState(false);
   const [notes, setNotes] = useState(item.notes || '');
 
-  const handleToggle = () => {
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!item.completed) {
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 300);
     }
     onToggle();
+  };
+
+  const handleExpand = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (confirm(`Deseja remover a skill "${item.name}"?`)) {
+      onRemove();
+    }
+  };
+
+  const handleImportanceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.stopPropagation();
+    onUpdateImportance(e.target.value as ImportanceLevel);
   };
 
   const getImportanceColor = (importance: ImportanceLevel) => {
@@ -53,7 +71,7 @@ export function RoadmapItem({
         <button
           onClick={handleToggle}
           className={cn(
-            "w-6 h-6 rounded-sm border-2 flex items-center justify-center transition-all duration-200",
+            "w-6 h-6 rounded-sm border-2 flex items-center justify-center transition-all duration-200 flex-shrink-0",
             item.completed 
               ? "bg-[#E20074] border-[#E20074] text-white" 
               : "border-gray-300 hover:border-[#E20074] bg-white"
@@ -64,7 +82,7 @@ export function RoadmapItem({
 
         {/* Name */}
         <span className={cn(
-          "flex-1 font-bold text-sm uppercase tracking-tight transition-all duration-200",
+          "flex-1 font-bold text-sm uppercase tracking-tight transition-all duration-200 truncate",
           item.completed ? "text-gray-400 line-through" : "text-[#333333]"
         )}>
           {item.name}
@@ -73,7 +91,8 @@ export function RoadmapItem({
         {/* Importance Badge / Selector */}
         <select
           value={item.importance}
-          onChange={(e) => onUpdateImportance(e.target.value as ImportanceLevel)}
+          onChange={handleImportanceChange}
+          onClick={(e) => e.stopPropagation()}
           className={cn(
             "text-[9px] uppercase font-black px-2 py-1 rounded-sm border transition-colors cursor-pointer outline-none tracking-widest",
             getImportanceColor(item.importance)
@@ -87,7 +106,7 @@ export function RoadmapItem({
         {/* Actions */}
         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={handleExpand}
             className={cn(
               "p-2 rounded-sm transition-colors",
               isExpanded ? "bg-[#E20074] text-white" : "text-gray-400 hover:bg-gray-100 hover:text-[#E20074]"
@@ -97,7 +116,7 @@ export function RoadmapItem({
             <MessageSquare size={14} />
           </button>
           <button
-            onClick={onRemove}
+            onClick={handleRemove}
             className="p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 rounded-sm transition-colors"
             title="Remover"
           >
@@ -107,7 +126,7 @@ export function RoadmapItem({
 
         {/* Expand Toggle (Mobile/Always visible) */}
         <button
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={handleExpand}
           className="p-1 text-gray-400 hover:text-[#E20074] md:hidden"
         >
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -125,6 +144,7 @@ export function RoadmapItem({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             onBlur={() => onUpdateNotes(notes)}
+            onClick={(e) => e.stopPropagation()}
             placeholder="Adicione links, comandos ou observações aqui..."
             className="w-full min-h-[100px] p-3 text-xs font-medium bg-white border border-gray-200 rounded-sm focus:ring-2 focus:ring-[#E20074]/20 focus:border-[#E20074] outline-none transition-all resize-y text-[#333333]"
           />

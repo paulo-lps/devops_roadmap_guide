@@ -34,7 +34,6 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Basic validation to ensure we have the right structure
         if (Array.isArray(parsed) && parsed.length > 0) {
           setData(parsed);
         }
@@ -62,15 +61,12 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
 
           // If we are at the level where the item should be
           if (currentPath.length === 1) {
-            if (obj.items) {
-              return {
-                ...obj,
-                items: obj.items.map((item: RoadmapItem) =>
-                  item.name === currentPath[0] ? updateFn(item) : item
-                ),
-              };
-            }
-            return obj;
+            return {
+              ...obj,
+              items: (obj.items || []).map((item: RoadmapItem) =>
+                item.name === currentPath[0] ? updateFn(item) : item
+              ),
+            };
           }
 
           // If we need to go deeper into subcategories
@@ -123,17 +119,14 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
 
           // If we are at the parent level
           if (currentPath.length === 1) {
-            if (obj.subcategories) {
-              return {
-                ...obj,
-                subcategories: obj.subcategories.map((sub: RoadmapSubcategory) =>
-                  sub.name === currentPath[0]
-                    ? { ...sub, items: [...(sub.items || []), newItem] }
-                    : sub
-                )
-              };
-            }
-            return obj;
+            return {
+              ...obj,
+              subcategories: (obj.subcategories || []).map((sub: RoadmapSubcategory) =>
+                sub.name === currentPath[0]
+                  ? { ...sub, items: [...(sub.items || []), newItem] }
+                  : sub
+              )
+            };
           }
 
           // Go deeper
@@ -165,13 +158,10 @@ export function useRoadmapProgress(initialData: RoadmapCategory[]) {
           if (!obj) return obj;
 
           if (currentPath.length === 1) {
-            if (obj.items) {
-              return {
-                ...obj,
-                items: obj.items.filter((item: RoadmapItem) => item.name !== currentPath[0])
-              };
-            }
-            return obj;
+            return {
+              ...obj,
+              items: (obj.items || []).filter((item: RoadmapItem) => item.name !== currentPath[0])
+            };
           }
 
           if (obj.subcategories) {
